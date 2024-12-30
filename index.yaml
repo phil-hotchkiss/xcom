@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  description: 'This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates.'
+  description: 'This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates'
   version: '4.0'
   title: XCom.API
   contact:
