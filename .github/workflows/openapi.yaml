@@ -1,25 +1,43 @@
-name: Generate ASP.NET Core 8 Server Stub
+name: Generate .NET 8 Server Stub
 
 on:
   push:
     paths:
-      - index.yaml  # Run this action when OpenAPI specs change.
-  workflow_dispatch:  # Allow manual triggering.
+      - index.yaml  # Trigger when OpenAPI spec files are modified
+  workflow_dispatch:  # Allow manual triggering
 
 jobs:
-  generate-aspnetcore-server:
+  generate-server-stub:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Generate ASP.NET Core 8 Server Stub
-        uses: hatamiarash7/openapi-generator@v0.3.0
+      - name: Set up Java for OpenAPI Generator
+        uses: actions/setup-java@v3
         with:
-          generator: aspnetcore  # The correct argument for specifying the generator.
-          generator-tag: latest  # Version of the generator.
-          openapi-file: ./index.yaml  # Path to your OpenAPI spec.
-          output-dir: ./server  # Output directory.
-          command-args: |  # Additional properties for customization.
-            --additional-properties=targetFramework=net8.0
+          java-version: '11'
+          distribution: 'temurin'
+
+      - name: Install OpenAPI Generator CLI
+        run: |
+          wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.6.0/openapi-generator-cli-6.6.0.jar -O openapi-generator-cli.jar
+
+      - name: Generate .NET 8 Server Stub
+        run: |
+          java -jar openapi-generator-cli.jar generate \
+          -i ./specs/openapi.yaml \
+          -g aspnetcore \
+          -o ./generated-dotnet-server \
+          --additional-properties=targetFramework=net8.0
+
+      - name: Commit and Push Generated Code
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./generated-dotnet-server
+          git commit -m "Generated .NET 8 server stub from OpenAPI spec"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
