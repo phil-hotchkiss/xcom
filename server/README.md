@@ -1,6 +1,6 @@
 # XCom - ASP.NET Core 3.1 Server
 
-This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates.
+This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates
 
 ## Upgrade NuGet Packages
 

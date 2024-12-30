@@ -4,7 +4,7 @@
     "contact" : {
       "email" : "phil.hotchkiss@veteransunited.com"
     },
-    "description" : "This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates.",
+    "description" : "This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates",
     "title" : "XCom.API",
     "version" : "4.0"
   },

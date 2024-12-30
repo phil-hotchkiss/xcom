@@ -1,7 +1,7 @@
 /*
  * XCom.API
  *
- * This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates.
+ * This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates
  *
  * The version of the OpenAPI document: 4.0
  * Contact: phil.hotchkiss@veteransunited.com
