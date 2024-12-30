@@ -1,0 +1,1119 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "contact" : {
+      "email" : "phil.hotchkiss@veteransunited.com"
+    },
+    "description" : "This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates.",
+    "title" : "XCom.API",
+    "version" : "4.0"
+  },
+  "servers" : [ {
+    "url" : "/"
+  } ],
+  "tags" : [ {
+    "name" : "mail"
+  }, {
+    "name" : "connect"
+  }, {
+    "name" : "template-sets"
+  } ],
+  "paths" : {
+    "/template-sets" : {
+      "get" : {
+        "description" : "Get template sets by query parameters",
+        "operationId" : "queryTemplateSets",
+        "parameters" : [ {
+          "explode" : true,
+          "in" : "query",
+          "name" : "sendGridTemplateId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        }, {
+          "explode" : true,
+          "in" : "query",
+          "name" : "templateSetName",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "style" : "form"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/QueryTemplateSetSuccessResponse"
+                }
+              }
+            },
+            "description" : "OK"
+          }
+        },
+        "summary" : "Get template sets by query parameters",
+        "tags" : [ "template-sets" ]
+      },
+      "post" : {
+        "operationId" : "createTemplateSet",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TemplateSet"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TemplateSetCreateSuccessResponse"
+                }
+              }
+            },
+            "description" : "Created"
+          }
+        },
+        "summary" : "Create a template set",
+        "tags" : [ "template-sets" ]
+      }
+    },
+    "/template-sets/{id}" : {
+      "get" : {
+        "operationId" : "getTemplateSet",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "guid",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/GetTemplateSetSuccessResponse"
+                }
+              }
+            },
+            "description" : "Ok"
+          }
+        },
+        "summary" : "Get a template set",
+        "tags" : [ "template-sets" ]
+      },
+      "patch" : {
+        "operationId" : "updateTemplateSet",
+        "parameters" : [ {
+          "explode" : false,
+          "in" : "path",
+          "name" : "id",
+          "required" : true,
+          "schema" : {
+            "format" : "guid",
+            "type" : "string"
+          },
+          "style" : "simple"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TemplateSet"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "204" : {
+            "description" : "No Content"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          },
+          "404" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Not Found"
+          }
+        },
+        "summary" : "Update a template set",
+        "tags" : [ "template-sets" ]
+      }
+    },
+    "/templated-email" : {
+      "post" : {
+        "description" : "Send a templated email",
+        "operationId" : "sendTemplatedEmail",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/TemplatedEmailRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TemplatedEmailSuccessResponse"
+                }
+              }
+            },
+            "description" : "Accepted"
+          },
+          "400" : {
+            "description" : "Bad Request"
+          }
+        },
+        "summary" : "Send a templated email",
+        "tags" : [ "mail" ]
+      }
+    },
+    "/simple-email" : {
+      "post" : {
+        "description" : "Send Simple Email without template",
+        "operationId" : "sendSimpleEmail",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/SimpleMailRequest"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "202" : {
+            "description" : "Accepted"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "description" : "Bad Request"
+          }
+        },
+        "summary" : "Send simple email",
+        "tags" : [ "mail" ]
+      }
+    },
+    "/connect" : {
+      "post" : {
+        "description" : "Webhook to Receive SendGrid Events",
+        "operationId" : "connect",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "items" : {
+                  "$ref" : "#/components/schemas/SendgridWebhook"
+                },
+                "type" : "array"
+              }
+            }
+          },
+          "description" : "Webhook"
+        },
+        "responses" : {
+          "200" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Webhook Event Receive"
+          },
+          "400" : {
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "string"
+                }
+              }
+            },
+            "description" : "Webhook Event Not Receive"
+          }
+        },
+        "summary" : "Webhook for SendGrid Events",
+        "tags" : [ "connect" ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "SuccessResponseData" : {
+        "properties" : {
+          "id" : {
+            "type" : "string"
+          },
+          "updated" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "deleted" : {
+            "format" : "date-time",
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "VersionedSuccessResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/SuccessResponseData"
+        }, {
+          "$ref" : "#/components/schemas/VersionedSuccessResponseData_allOf"
+        } ]
+      },
+      "PartialGetSuccessResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/SuccessResponseData"
+        }, {
+          "$ref" : "#/components/schemas/PartialGetSuccessResponseData_allOf"
+        } ]
+      },
+      "PreviousNextSuccessResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/SuccessResponseData"
+        }, {
+          "$ref" : "#/components/schemas/PreviousNextSuccessResponseData_allOf"
+        } ]
+      },
+      "PageBasedPagingResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/SuccessResponseData"
+        }, {
+          "$ref" : "#/components/schemas/PageBasedPagingResponseData_allOf"
+        } ]
+      },
+      "IndexBasedResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/SuccessResponseData"
+        }, {
+          "$ref" : "#/components/schemas/IndexBasedResponseData_allOf"
+        } ]
+      },
+      "Response" : {
+        "externalDocs" : {
+          "description" : "Google Json Style Guide",
+          "url" : "https://google.github.io/styleguide/jsoncstyleguide.xml"
+        },
+        "properties" : {
+          "apiVersion" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          }
+        }
+      },
+      "SuccessResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/Response"
+        }, {
+          "required" : [ "data" ],
+          "type" : "object"
+        } ]
+      },
+      "ResponseErrorModel" : {
+        "properties" : {
+          "domain" : {
+            "type" : "string"
+          },
+          "reason" : {
+            "type" : "string"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "location" : {
+            "type" : "string"
+          },
+          "locationType" : {
+            "type" : "string"
+          },
+          "extendedHelp" : {
+            "type" : "string"
+          },
+          "sendReport" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ResponseError" : {
+        "properties" : {
+          "code" : {
+            "type" : "integer"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "items" : {
+              "$ref" : "#/definitions/ResponseErrorModel"
+            },
+            "type" : "array"
+          }
+        }
+      },
+      "ErrorResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/Response"
+        }, {
+          "$ref" : "#/components/schemas/ErrorResponse_allOf"
+        } ]
+      },
+      "PreviousNextPagingSuccessResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/Response"
+        }, {
+          "required" : [ "apiVersion" ],
+          "type" : "object"
+        } ]
+      },
+      "IndexBasedPagingSuccessResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/Response"
+        }, {
+          "required" : [ "apiVersion" ],
+          "type" : "object"
+        } ]
+      },
+      "PageBasedPagingSuccessResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/definitions/Response"
+        }, {
+          "required" : [ "apiVersion" ],
+          "type" : "object"
+        } ]
+      },
+      "TemplateSet" : {
+        "example" : {
+          "rateLimit" : {
+            "period" : 6.027456183070403,
+            "limit" : 1.4658129805029452
+          },
+          "bcc" : [ {
+            "name" : "name",
+            "email" : "email"
+          }, {
+            "name" : "name",
+            "email" : "email"
+          } ],
+          "variations" : [ {
+            "percentage" : 0.8008282,
+            "sendGridTemplateId" : "sendGridTemplateId"
+          }, {
+            "percentage" : 0.8008282,
+            "sendGridTemplateId" : "sendGridTemplateId"
+          } ],
+          "description" : "description",
+          "attachmentsEnabled" : true,
+          "categories" : [ "categories", "categories" ],
+          "templateSetName" : "templateSetName"
+        },
+        "properties" : {
+          "templateSetName" : {
+            "description" : "This will be the name by which you identify the template set. It must be unique.",
+            "type" : "string"
+          },
+          "categories" : {
+            "items" : {
+              "type" : "string"
+            },
+            "type" : "array"
+          },
+          "variations" : {
+            "description" : "These are the send grid templates that are going to be used for your multi-variate email",
+            "items" : {
+              "$ref" : "#/components/schemas/Variation"
+            },
+            "type" : "array"
+          },
+          "rateLimit" : {
+            "$ref" : "#/components/schemas/RateLimit"
+          },
+          "description" : {
+            "description" : "This property is used to describe the template set use case",
+            "type" : "string"
+          },
+          "bcc" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Recipient"
+            },
+            "type" : "array"
+          },
+          "attachmentsEnabled" : {
+            "default" : true,
+            "description" : "Indicates whether or not attachments are enabled for the designated template",
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "RateLimit" : {
+        "example" : {
+          "period" : 6.027456183070403,
+          "limit" : 1.4658129805029452
+        },
+        "properties" : {
+          "period" : {
+            "type" : "number"
+          },
+          "limit" : {
+            "type" : "number"
+          }
+        },
+        "type" : "object"
+      },
+      "Variation" : {
+        "example" : {
+          "percentage" : 0.8008282,
+          "sendGridTemplateId" : "sendGridTemplateId"
+        },
+        "properties" : {
+          "sendGridTemplateId" : {
+            "type" : "string"
+          },
+          "percentage" : {
+            "format" : "float",
+            "type" : "number"
+          }
+        },
+        "type" : "object"
+      },
+      "TemplatedEmailRequest" : {
+        "example" : {
+          "cc" : [ {
+            "name" : "name",
+            "email" : "email"
+          }, {
+            "name" : "name",
+            "email" : "email"
+          } ],
+          "bcc" : [ {
+            "name" : "name",
+            "email" : "email"
+          }, {
+            "name" : "name",
+            "email" : "email"
+          } ],
+          "attachments" : [ {
+            "disposition" : "attachment",
+            "filename" : "filename",
+            "contentId" : "contentId",
+            "contentType" : "application/pdf",
+            "content" : "content"
+          }, {
+            "disposition" : "attachment",
+            "filename" : "filename",
+            "contentId" : "contentId",
+            "contentType" : "application/pdf",
+            "content" : "content"
+          } ],
+          "businessKey" : "businessKey",
+          "templateData" : "{}",
+          "replyTo" : {
+            "name" : "name",
+            "email" : "email"
+          },
+          "from" : {
+            "name" : "name",
+            "email" : "email"
+          },
+          "onBehalfOfBranch" : "onBehalfOfBranch",
+          "to" : [ {
+            "name" : "name",
+            "email" : "email"
+          }, {
+            "name" : "name",
+            "email" : "email"
+          } ],
+          "sendAt" : "2000-01-23T04:56:07.000+00:00",
+          "batchId" : "batchId",
+          "templateSetName" : "templateSetName"
+        },
+        "properties" : {
+          "templateSetName" : {
+            "description" : "This is the name identifying the set of templates to be grouped together for the delivery of this email",
+            "type" : "string"
+          },
+          "businessKey" : {
+            "description" : "This key is leveraged for rate limiting purposes. When specified, if the template has a rate limit specified, the business key will be utilied for the rate limit.",
+            "type" : "string"
+          },
+          "onBehalfOfBranch" : {
+            "description" : "When specified, the dynamic template data supplied to SendGrid will include relevant content associated with that branch (address, footer, website, socials)",
+            "type" : "string"
+          },
+          "to" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Recipient"
+            },
+            "type" : "array"
+          },
+          "cc" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Recipient"
+            },
+            "type" : "array"
+          },
+          "bcc" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Recipient"
+            },
+            "type" : "array"
+          },
+          "templateData" : {
+            "type" : "object"
+          },
+          "from" : {
+            "$ref" : "#/components/schemas/Recipient"
+          },
+          "replyTo" : {
+            "$ref" : "#/components/schemas/Recipient"
+          },
+          "sendAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "batchId" : {
+            "type" : "string"
+          },
+          "attachments" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Attachment"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object"
+      },
+      "TemplatedEmailSuccessResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SuccessResponse"
+        }, {
+          "$ref" : "#/components/schemas/TemplatedEmailSuccessResponse_allOf"
+        } ]
+      },
+      "TemplatedEmailResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SuccessResponseData"
+        } ]
+      },
+      "TemplateSetCreateSuccessResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SuccessResponse"
+        }, {
+          "$ref" : "#/components/schemas/TemplateSetCreateSuccessResponse_allOf"
+        } ]
+      },
+      "TemplateSetCreateSuccessResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SuccessResponseData"
+        } ]
+      },
+      "GetTemplateSetSuccessResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SuccessResponse"
+        }, {
+          "$ref" : "#/components/schemas/GetTemplateSetSuccessResponse_allOf"
+        } ]
+      },
+      "GetTemplateSetSuccessResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SuccessResponseData"
+        }, {
+          "$ref" : "#/components/schemas/TemplateSet"
+        } ]
+      },
+      "QueryTemplateSetSuccessResponse" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SuccessResponse"
+        }, {
+          "$ref" : "#/components/schemas/QueryTemplateSetSuccessResponse_allOf"
+        } ]
+      },
+      "QueryTemplateSetSuccessResponseData" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/SuccessResponseData"
+        }, {
+          "$ref" : "#/components/schemas/QueryTemplateSetSuccessResponseData_allOf"
+        } ]
+      },
+      "SendgridWebhook" : {
+        "example" : {
+          "ip" : "ip",
+          "xcomid" : 0,
+          "sendrequestguid" : "046b6c7f-0b8a-43b9-b35d-6489e6daee91",
+          "sg_event_id" : "sg_event_id",
+          "type" : null,
+          "smtp-id" : "smtp-id",
+          "environment" : "environment",
+          "sg_message_id" : "sg_message_id",
+          "response" : "response",
+          "event" : null,
+          "email" : "email",
+          "timestamp" : "timestamp",
+          "status" : "status"
+        },
+        "properties" : {
+          "type" : {
+            "$ref" : "#/components/schemas/WebhookType"
+          },
+          "sg_message_id" : {
+            "type" : "string"
+          },
+          "ip" : {
+            "type" : "string"
+          },
+          "sg_event_id" : {
+            "type" : "string"
+          },
+          "event" : {
+            "$ref" : "#/components/schemas/WebhookEvent"
+          },
+          "response" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "timestamp" : {
+            "type" : "string"
+          },
+          "smtp-id" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string"
+          },
+          "xcomid" : {
+            "format" : "int64",
+            "type" : "integer"
+          },
+          "sendrequestguid" : {
+            "format" : "uuid",
+            "type" : "string"
+          },
+          "environment" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "WebhookEvent" : {
+        "enum" : [ "Processed", "Dropped", "Delivered", "Deferred", "Bounce", "Open", "Click", "SpamReport", "Unsubscribe", "Group_Unsubscribe", "Group_Resubscribe" ],
+        "type" : "string"
+      },
+      "WebhookType" : {
+        "enum" : [ "blocked", "bounce" ],
+        "type" : "string"
+      },
+      "SimpleMailRequest" : {
+        "example" : {
+          "cc" : [ {
+            "name" : "name",
+            "email" : "email"
+          }, {
+            "name" : "name",
+            "email" : "email"
+          } ],
+          "bcc" : [ {
+            "name" : "name",
+            "email" : "email"
+          }, {
+            "name" : "name",
+            "email" : "email"
+          } ],
+          "attachments" : [ {
+            "disposition" : "attachment",
+            "filename" : "filename",
+            "contentId" : "contentId",
+            "contentType" : "application/pdf",
+            "content" : "content"
+          }, {
+            "disposition" : "attachment",
+            "filename" : "filename",
+            "contentId" : "contentId",
+            "contentType" : "application/pdf",
+            "content" : "content"
+          } ],
+          "subject" : "subject",
+          "replyTo" : {
+            "name" : "name",
+            "email" : "email"
+          },
+          "from" : {
+            "name" : "name",
+            "email" : "email"
+          },
+          "to" : [ {
+            "name" : "name",
+            "email" : "email"
+          }, {
+            "name" : "name",
+            "email" : "email"
+          } ],
+          "sendAt" : "2000-01-23T04:56:07.000+00:00",
+          "content" : {
+            "type" : "text/plain",
+            "value" : "value"
+          }
+        },
+        "properties" : {
+          "to" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Recipient"
+            },
+            "type" : "array"
+          },
+          "cc" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Recipient"
+            },
+            "type" : "array"
+          },
+          "bcc" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Recipient"
+            },
+            "type" : "array"
+          },
+          "from" : {
+            "$ref" : "#/components/schemas/Recipient"
+          },
+          "replyTo" : {
+            "$ref" : "#/components/schemas/Recipient"
+          },
+          "sendAt" : {
+            "format" : "date-time",
+            "type" : "string"
+          },
+          "attachments" : {
+            "items" : {
+              "$ref" : "#/components/schemas/Attachment"
+            },
+            "type" : "array"
+          },
+          "subject" : {
+            "type" : "string"
+          },
+          "content" : {
+            "$ref" : "#/components/schemas/Content"
+          }
+        },
+        "type" : "object"
+      },
+      "Content" : {
+        "example" : {
+          "type" : "text/plain",
+          "value" : "value"
+        },
+        "properties" : {
+          "type" : {
+            "enum" : [ "text/plain", "text/html" ],
+            "type" : "string"
+          },
+          "value" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Recipient" : {
+        "example" : {
+          "name" : "name",
+          "email" : "email"
+        },
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "Attachment" : {
+        "example" : {
+          "disposition" : "attachment",
+          "filename" : "filename",
+          "contentId" : "contentId",
+          "contentType" : "application/pdf",
+          "content" : "content"
+        },
+        "properties" : {
+          "content" : {
+            "type" : "string"
+          },
+          "contentId" : {
+            "type" : "string"
+          },
+          "contentType" : {
+            "example" : "application/pdf",
+            "type" : "string"
+          },
+          "filename" : {
+            "type" : "string"
+          },
+          "disposition" : {
+            "enum" : [ "attachment", "inline" ],
+            "type" : "string"
+          }
+        },
+        "type" : "object"
+      },
+      "MailResponse" : {
+        "properties" : {
+          "message" : {
+            "example" : "Email has been sent",
+            "type" : "string"
+          },
+          "xcomRequestId" : {
+            "example" : 1234,
+            "type" : "integer"
+          },
+          "successful" : {
+            "example" : false,
+            "type" : "boolean"
+          }
+        },
+        "type" : "object"
+      },
+      "ApplicationType" : {
+        "enum" : [ "NotSet", "Vuhl", "Bank", "Paddio", "SsOps", "MRC", "SelectStar" ],
+        "type" : "string"
+      },
+      "NewTemplateRequest" : {
+        "properties" : {
+          "templateName" : {
+            "type" : "string"
+          },
+          "application" : {
+            "$ref" : "#/components/schemas/ApplicationType"
+          },
+          "sendGridTemplateId" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "permissions" : {
+            "type" : "integer"
+          }
+        },
+        "required" : [ "application", "sendGridTemplateId", "templateName" ],
+        "type" : "object"
+      },
+      "DeleteTemplateRequest" : {
+        "properties" : {
+          "templateId" : {
+            "type" : "integer"
+          }
+        },
+        "required" : [ "templateId" ],
+        "type" : "object"
+      },
+      "UpdateTemplateRequest" : {
+        "properties" : {
+          "id" : {
+            "type" : "integer"
+          },
+          "templateName" : {
+            "type" : "string"
+          },
+          "application" : {
+            "$ref" : "#/components/schemas/ApplicationType"
+          },
+          "sendGridTemplateId" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "permissions" : {
+            "type" : "integer"
+          }
+        },
+        "required" : [ "application", "id", "sendGridTemplateId", "templateName" ],
+        "type" : "object"
+      },
+      "VersionedSuccessResponseData_allOf" : {
+        "properties" : {
+          "etag" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "PartialGetSuccessResponseData_allOf" : {
+        "properties" : {
+          "fields" : {
+            "type" : "string"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "PreviousNextSuccessResponseData_allOf" : {
+        "properties" : {
+          "previousLink" : {
+            "type" : "string"
+          },
+          "nextLink" : {
+            "type" : "string"
+          },
+          "itemsPerPage" : {
+            "type" : "integer"
+          },
+          "startIndex" : {
+            "type" : "integer"
+          },
+          "totalItems" : {
+            "type" : "integer"
+          },
+          "currentItemCount" : {
+            "type" : "integer"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "PageBasedPagingResponseData_allOf" : {
+        "properties" : {
+          "pageIndex" : {
+            "type" : "integer"
+          },
+          "totalPages" : {
+            "type" : "integer"
+          },
+          "totalItems" : {
+            "type" : "integer"
+          },
+          "currentItemCount" : {
+            "type" : "integer"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "IndexBasedResponseData_allOf" : {
+        "properties" : {
+          "itemsPerPage" : {
+            "type" : "integer"
+          },
+          "startIndex" : {
+            "type" : "integer"
+          },
+          "totalItems" : {
+            "type" : "integer"
+          },
+          "currentItemCount" : {
+            "type" : "integer"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "ErrorResponse_allOf" : {
+        "properties" : {
+          "error" : {
+            "$ref" : "#/definitions/ResponseError"
+          }
+        },
+        "required" : [ "apiVersion", "error" ],
+        "type" : "object",
+        "example" : null
+      },
+      "TemplatedEmailSuccessResponse_allOf" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/TemplatedEmailResponseData"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "TemplateSetCreateSuccessResponse_allOf" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/TemplateSetCreateSuccessResponseData"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "GetTemplateSetSuccessResponse_allOf" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/GetTemplateSetSuccessResponseData"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "QueryTemplateSetSuccessResponse_allOf" : {
+        "properties" : {
+          "data" : {
+            "$ref" : "#/components/schemas/QueryTemplateSetSuccessResponseData"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      },
+      "QueryTemplateSetSuccessResponseData_allOf" : {
+        "properties" : {
+          "items" : {
+            "items" : {
+              "$ref" : "#/components/schemas/TemplateSet"
+            },
+            "type" : "array"
+          }
+        },
+        "type" : "object",
+        "example" : null
+      }
+    },
+    "securitySchemes" : {
+      "oidc" : {
+        "openIdConnectUrl" : "https://vu.okta.com/oauth2/ausug0zrmfVA3d6Nx0x7/.well-known/openid-configuration",
+        "type" : "openIdConnect"
+      }
+    }
+  }
+}
