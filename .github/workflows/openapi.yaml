@@ -14,8 +14,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Generate ASP.NET Core 8 Server Stub
-        uses: openapitools/openapi-generator-action@v4
+      - name: OpenAPI Generator
+        uses: hatamiarash7/openapi-generator@v0.3.0
         with:
           generator-cli-version: latest
           generator-name: aspnetcore
