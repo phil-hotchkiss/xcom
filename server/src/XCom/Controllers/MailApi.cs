@@ -26,7 +26,7 @@ namespace XCom.Controllers
     /// 
     /// </summary>
     [ApiController]
-    public class MailApiController : ControllerBase
+    public abstract class MailApiController : ControllerBase
     { 
         /// <summary>
         /// Send simple email
@@ -41,16 +41,7 @@ namespace XCom.Controllers
         [ValidateModelState]
         [SwaggerOperation("SendSimpleEmail")]
         [SwaggerResponse(statusCode: 400, type: typeof(ErrorResponse), description: "Bad Request")]
-        public virtual IActionResult SendSimpleEmail([FromBody]SimpleMailRequest simpleMailRequest)
-        {
-
-            //TODO: Uncomment the next line to return response 202 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(202);
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(ErrorResponse));
-
-            throw new NotImplementedException();
-        }
+        public abstract IActionResult SendSimpleEmail([FromBody]SimpleMailRequest simpleMailRequest);
 
         /// <summary>
         /// Send a templated email
@@ -65,21 +56,6 @@ namespace XCom.Controllers
         [ValidateModelState]
         [SwaggerOperation("SendTemplatedEmail")]
         [SwaggerResponse(statusCode: 200, type: typeof(TemplatedEmailSuccessResponse), description: "Accepted")]
-        public virtual IActionResult SendTemplatedEmail([FromBody]TemplatedEmailRequest templatedEmailRequest)
-        {
-
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(TemplatedEmailSuccessResponse));
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400);
-            string exampleJson = null;
-            exampleJson = "null";
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<TemplatedEmailSuccessResponse>(exampleJson)
-            : default(TemplatedEmailSuccessResponse);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
-        }
+        public abstract IActionResult SendTemplatedEmail([FromBody]TemplatedEmailRequest templatedEmailRequest);
     }
 }

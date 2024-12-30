@@ -26,7 +26,7 @@ namespace XCom.Controllers
     /// 
     /// </summary>
     [ApiController]
-    public class TemplateSetsApiController : ControllerBase
+    public abstract class TemplateSetsApiController : ControllerBase
     { 
         /// <summary>
         /// Create a template set
@@ -39,20 +39,7 @@ namespace XCom.Controllers
         [ValidateModelState]
         [SwaggerOperation("CreateTemplateSet")]
         [SwaggerResponse(statusCode: 201, type: typeof(TemplateSetCreateSuccessResponse), description: "Created")]
-        public virtual IActionResult CreateTemplateSet([FromBody]TemplateSet templateSet)
-        {
-
-            //TODO: Uncomment the next line to return response 201 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(201, default(TemplateSetCreateSuccessResponse));
-            string exampleJson = null;
-            exampleJson = "null";
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<TemplateSetCreateSuccessResponse>(exampleJson)
-            : default(TemplateSetCreateSuccessResponse);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
-        }
+        public abstract IActionResult CreateTemplateSet([FromBody]TemplateSet templateSet);
 
         /// <summary>
         /// Get a template set
@@ -64,20 +51,7 @@ namespace XCom.Controllers
         [ValidateModelState]
         [SwaggerOperation("GetTemplateSet")]
         [SwaggerResponse(statusCode: 200, type: typeof(GetTemplateSetSuccessResponse), description: "Ok")]
-        public virtual IActionResult GetTemplateSet([FromRoute (Name = "id")][Required]string id)
-        {
-
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(GetTemplateSetSuccessResponse));
-            string exampleJson = null;
-            exampleJson = "null";
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<GetTemplateSetSuccessResponse>(exampleJson)
-            : default(GetTemplateSetSuccessResponse);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
-        }
+        public abstract IActionResult GetTemplateSet([FromRoute (Name = "id")][Required]string id);
 
         /// <summary>
         /// Get template sets by query parameters
@@ -91,20 +65,7 @@ namespace XCom.Controllers
         [ValidateModelState]
         [SwaggerOperation("QueryTemplateSets")]
         [SwaggerResponse(statusCode: 200, type: typeof(QueryTemplateSetSuccessResponse), description: "OK")]
-        public virtual IActionResult QueryTemplateSets([FromQuery (Name = "sendGridTemplateId")]string sendGridTemplateId, [FromQuery (Name = "templateSetName")]string templateSetName)
-        {
-
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(QueryTemplateSetSuccessResponse));
-            string exampleJson = null;
-            exampleJson = "null";
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<QueryTemplateSetSuccessResponse>(exampleJson)
-            : default(QueryTemplateSetSuccessResponse);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
-        }
+        public abstract IActionResult QueryTemplateSets([FromQuery (Name = "sendGridTemplateId")]string sendGridTemplateId, [FromQuery (Name = "templateSetName")]string templateSetName);
 
         /// <summary>
         /// Update a template set
@@ -121,17 +82,6 @@ namespace XCom.Controllers
         [SwaggerOperation("UpdateTemplateSet")]
         [SwaggerResponse(statusCode: 400, type: typeof(ErrorResponse), description: "Bad Request")]
         [SwaggerResponse(statusCode: 404, type: typeof(ErrorResponse), description: "Not Found")]
-        public virtual IActionResult UpdateTemplateSet([FromRoute (Name = "id")][Required]string id, [FromBody]TemplateSet templateSet)
-        {
-
-            //TODO: Uncomment the next line to return response 204 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(204);
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(ErrorResponse));
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404, default(ErrorResponse));
-
-            throw new NotImplementedException();
-        }
+        public abstract IActionResult UpdateTemplateSet([FromRoute (Name = "id")][Required]string id, [FromBody]TemplateSet templateSet);
     }
 }

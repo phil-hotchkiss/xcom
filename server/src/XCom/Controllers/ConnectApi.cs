@@ -26,7 +26,7 @@ namespace XCom.Controllers
     /// 
     /// </summary>
     [ApiController]
-    public class ConnectApiController : ControllerBase
+    public abstract class ConnectApiController : ControllerBase
     { 
         /// <summary>
         /// Webhook for SendGrid Events
@@ -42,20 +42,6 @@ namespace XCom.Controllers
         [SwaggerOperation("Connect")]
         [SwaggerResponse(statusCode: 200, type: typeof(string), description: "Webhook Event Receive")]
         [SwaggerResponse(statusCode: 400, type: typeof(string), description: "Webhook Event Not Receive")]
-        public virtual IActionResult Connect([FromBody]List<SendgridWebhook> sendgridWebhook)
-        {
-
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(string));
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400, default(string));
-            string exampleJson = null;
-            
-            var example = exampleJson != null
-            ? JsonConvert.DeserializeObject<string>(exampleJson)
-            : default(string);
-            //TODO: Change the data returned
-            return new ObjectResult(example);
-        }
+        public abstract IActionResult Connect([FromBody]List<SendgridWebhook> sendgridWebhook);
     }
 }

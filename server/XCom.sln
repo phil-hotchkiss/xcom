@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XCom", "src\XCom\XCom.csproj", "{66F092DF-46E5-4241-843B-C0618E95691D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XCom", "src\XCom\XCom.csproj", "{A19A8F91-8C54-4A06-BBC3-5755D074539F}"
 EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
         Release|Any CPU = Release|Any CPU
     EndGlobalSection
     GlobalSection(ProjectConfigurationPlatforms) = postSolution
-        {66F092DF-46E5-4241-843B-C0618E95691D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-        {66F092DF-46E5-4241-843B-C0618E95691D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-        {66F092DF-46E5-4241-843B-C0618E95691D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-        {66F092DF-46E5-4241-843B-C0618E95691D}.Release|Any CPU.Build.0 = Release|Any CPU
+        {A19A8F91-8C54-4A06-BBC3-5755D074539F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {A19A8F91-8C54-4A06-BBC3-5755D074539F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {A19A8F91-8C54-4A06-BBC3-5755D074539F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+        {A19A8F91-8C54-4A06-BBC3-5755D074539F}.Release|Any CPU.Build.0 = Release|Any CPU
     EndGlobalSection
     GlobalSection(SolutionProperties) = preSolution
         HideSolutionNode = FALSE
