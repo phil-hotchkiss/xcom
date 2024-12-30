@@ -30,7 +30,7 @@ jobs:
           -i ./index.yaml \
           -g aspnetcore \
           -o ./server \
-          --additional-properties=targetFramework=net8.0,packageName=XCom,solutionName=XCom
+          --additional-properties=targetFramework=net8.0,packageName=XCom,solutionName=XCom,interfaceOnly=true
 
       - name: Commit and Push Generated Code
         run: |
