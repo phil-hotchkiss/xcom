@@ -14,12 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: OpenAPI Generator
+      - name: Generate ASP.NET Core 8 Server Stub
         uses: hatamiarash7/openapi-generator@v0.3.0
         with:
-          generator-cli-version: latest
-          generator-name: aspnetcore
-          input-spec: ./index.yaml  # Path to your OpenAPI spec.
-          output: ./server
-          additional-properties: |
-            targetFramework=net8.0
+          generator: aspnetcore  # The correct argument for specifying the generator.
+          generator-tag: latest  # Version of the generator.
+          openapi-file: ./index.yaml  # Path to your OpenAPI spec.
+          output-dir: ./server  # Output directory.
+          command-args: |  # Additional properties for customization.
+            --additional-properties=targetFramework=net8.0
