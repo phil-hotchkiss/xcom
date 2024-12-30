@@ -1,0 +1,25 @@
+name: Generate ASP.NET Core 8 Server Stub
+
+on:
+  push:
+    paths:
+      - index.yaml  # Run this action when OpenAPI specs change.
+  workflow_dispatch:  # Allow manual triggering.
+
+jobs:
+  generate-aspnetcore-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Generate ASP.NET Core 8 Server Stub
+        uses: openapitools/openapi-generator-action@v4
+        with:
+          generator-cli-version: latest
+          generator-name: aspnetcore
+          input-spec: ./index.yaml  # Path to your OpenAPI spec.
+          output: ./server
+          additional-properties: |
+            targetFramework=net8.0
