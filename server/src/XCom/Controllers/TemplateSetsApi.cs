@@ -31,6 +31,7 @@ namespace XCom.Controllers
         /// <summary>
         /// Create a template set
         /// </summary>
+        /// <remarks>Create a template set</remarks>
         /// <param name="templateSet"></param>
         /// <response code="201">Created</response>
         [HttpPost]
@@ -44,6 +45,7 @@ namespace XCom.Controllers
         /// <summary>
         /// Get a template set
         /// </summary>
+        /// <remarks>Get a template set by id</remarks>
         /// <param name="id"></param>
         /// <response code="200">Ok</response>
         [HttpGet]
@@ -70,6 +72,7 @@ namespace XCom.Controllers
         /// <summary>
         /// Update a template set
         /// </summary>
+        /// <remarks>Update a template set</remarks>
         /// <param name="id"></param>
         /// <param name="templateSet"></param>
         /// <response code="204">No Content</response>

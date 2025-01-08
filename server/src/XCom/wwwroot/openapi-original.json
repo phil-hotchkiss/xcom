@@ -12,10 +12,13 @@
     "url" : "/"
   } ],
   "tags" : [ {
+    "description" : "Mail Delivery",
     "name" : "mail"
   }, {
+    "description" : "Webhook Behavior",
     "name" : "connect"
   }, {
+    "description" : "Template Set Management",
     "name" : "template-sets"
   } ],
   "paths" : {
@@ -58,6 +61,7 @@
         "tags" : [ "template-sets" ]
       },
       "post" : {
+        "description" : "Create a template set",
         "operationId" : "createTemplateSet",
         "requestBody" : {
           "content" : {
@@ -86,6 +90,7 @@
     },
     "/template-sets/{id}" : {
       "get" : {
+        "description" : "Get a template set by id",
         "operationId" : "getTemplateSet",
         "parameters" : [ {
           "explode" : false,
@@ -114,6 +119,7 @@
         "tags" : [ "template-sets" ]
       },
       "patch" : {
+        "description" : "Update a template set",
         "operationId" : "updateTemplateSet",
         "parameters" : [ {
           "explode" : false,
@@ -290,41 +296,6 @@
         },
         "type" : "object"
       },
-      "VersionedSuccessResponseData" : {
-        "allOf" : [ {
-          "$ref" : "#/definitions/SuccessResponseData"
-        }, {
-          "$ref" : "#/components/schemas/VersionedSuccessResponseData_allOf"
-        } ]
-      },
-      "PartialGetSuccessResponseData" : {
-        "allOf" : [ {
-          "$ref" : "#/definitions/SuccessResponseData"
-        }, {
-          "$ref" : "#/components/schemas/PartialGetSuccessResponseData_allOf"
-        } ]
-      },
-      "PreviousNextSuccessResponseData" : {
-        "allOf" : [ {
-          "$ref" : "#/definitions/SuccessResponseData"
-        }, {
-          "$ref" : "#/components/schemas/PreviousNextSuccessResponseData_allOf"
-        } ]
-      },
-      "PageBasedPagingResponseData" : {
-        "allOf" : [ {
-          "$ref" : "#/definitions/SuccessResponseData"
-        }, {
-          "$ref" : "#/components/schemas/PageBasedPagingResponseData_allOf"
-        } ]
-      },
-      "IndexBasedResponseData" : {
-        "allOf" : [ {
-          "$ref" : "#/definitions/SuccessResponseData"
-        }, {
-          "$ref" : "#/components/schemas/IndexBasedResponseData_allOf"
-        } ]
-      },
       "Response" : {
         "externalDocs" : {
           "description" : "Google Json Style Guide",
@@ -341,7 +312,7 @@
       },
       "SuccessResponse" : {
         "allOf" : [ {
-          "$ref" : "#/definitions/Response"
+          "$ref" : "#/components/schemas/Response"
         }, {
           "required" : [ "data" ],
           "type" : "object"
@@ -382,7 +353,7 @@
           },
           "errors" : {
             "items" : {
-              "$ref" : "#/definitions/ResponseErrorModel"
+              "$ref" : "#/components/schemas/ResponseErrorModel"
             },
             "type" : "array"
           }
@@ -390,33 +361,9 @@
       },
       "ErrorResponse" : {
         "allOf" : [ {
-          "$ref" : "#/definitions/Response"
+          "$ref" : "#/components/schemas/Response"
         }, {
           "$ref" : "#/components/schemas/ErrorResponse_allOf"
-        } ]
-      },
-      "PreviousNextPagingSuccessResponse" : {
-        "allOf" : [ {
-          "$ref" : "#/definitions/Response"
-        }, {
-          "required" : [ "apiVersion" ],
-          "type" : "object"
-        } ]
-      },
-      "IndexBasedPagingSuccessResponse" : {
-        "allOf" : [ {
-          "$ref" : "#/definitions/Response"
-        }, {
-          "required" : [ "apiVersion" ],
-          "type" : "object"
-        } ]
-      },
-      "PageBasedPagingSuccessResponse" : {
-        "allOf" : [ {
-          "$ref" : "#/definitions/Response"
-        }, {
-          "required" : [ "apiVersion" ],
-          "type" : "object"
         } ]
       },
       "TemplateSet" : {
@@ -972,88 +919,10 @@
         "required" : [ "application", "id", "sendGridTemplateId", "templateName" ],
         "type" : "object"
       },
-      "VersionedSuccessResponseData_allOf" : {
-        "properties" : {
-          "etag" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object",
-        "example" : null
-      },
-      "PartialGetSuccessResponseData_allOf" : {
-        "properties" : {
-          "fields" : {
-            "type" : "string"
-          }
-        },
-        "type" : "object",
-        "example" : null
-      },
-      "PreviousNextSuccessResponseData_allOf" : {
-        "properties" : {
-          "previousLink" : {
-            "type" : "string"
-          },
-          "nextLink" : {
-            "type" : "string"
-          },
-          "itemsPerPage" : {
-            "type" : "integer"
-          },
-          "startIndex" : {
-            "type" : "integer"
-          },
-          "totalItems" : {
-            "type" : "integer"
-          },
-          "currentItemCount" : {
-            "type" : "integer"
-          }
-        },
-        "type" : "object",
-        "example" : null
-      },
-      "PageBasedPagingResponseData_allOf" : {
-        "properties" : {
-          "pageIndex" : {
-            "type" : "integer"
-          },
-          "totalPages" : {
-            "type" : "integer"
-          },
-          "totalItems" : {
-            "type" : "integer"
-          },
-          "currentItemCount" : {
-            "type" : "integer"
-          }
-        },
-        "type" : "object",
-        "example" : null
-      },
-      "IndexBasedResponseData_allOf" : {
-        "properties" : {
-          "itemsPerPage" : {
-            "type" : "integer"
-          },
-          "startIndex" : {
-            "type" : "integer"
-          },
-          "totalItems" : {
-            "type" : "integer"
-          },
-          "currentItemCount" : {
-            "type" : "integer"
-          }
-        },
-        "type" : "object",
-        "example" : null
-      },
       "ErrorResponse_allOf" : {
         "properties" : {
           "error" : {
-            "$ref" : "#/definitions/ResponseError"
+            "$ref" : "#/components/schemas/ResponseError"
           }
         },
         "required" : [ "apiVersion", "error" ],
