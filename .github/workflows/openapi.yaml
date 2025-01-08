@@ -19,6 +19,10 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+      - name: Clone OpenAPI Spec Repository
+        run: |
+          git clone https://github.com/<organization>/openapi-specifications.git ./specs-repo
+
 
       - name: Install OpenAPI Generator CLI
         run: |
@@ -27,7 +31,7 @@ jobs:
       - name: Generate .NET 8 Server Stub
         run: |
           java -jar openapi-generator-cli.jar generate \
-          -i phil-hotchkiss/openapi-specifications/xcom/private/spec.yml \
+          -i ./specs-repo/xcom/private/spec.yml \
           -g aspnetcore \
           -o ./server \
           --additional-properties=useNewtonsoft=true,useSwashbuckle=true,aspNetCoreVersion=8,targetFramework=net8.0,packageName=XCom,solutionName=XCom,operationModifier=abstract,classModifier=abstract
