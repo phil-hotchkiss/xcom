@@ -29,21 +29,21 @@ namespace XCom.Models
         /// <summary>
         /// Gets or Sets Message
         /// </summary>
-        /// <example>&quot;Email has been sent&quot;</example>
+        /* <example>&quot;Email has been sent&quot;</example> */
         [DataMember(Name="message", EmitDefaultValue=false)]
         public string Message { get; set; }
 
         /// <summary>
         /// Gets or Sets XcomRequestId
         /// </summary>
-        /// <example>1234</example>
+        /* <example>1234</example> */
         [DataMember(Name="xcomRequestId", EmitDefaultValue=true)]
         public int XcomRequestId { get; set; }
 
         /// <summary>
         /// Gets or Sets Successful
         /// </summary>
-        /// <example>false</example>
+        /* <example>false</example> */
         [DataMember(Name="successful", EmitDefaultValue=true)]
         public bool Successful { get; set; }
 
@@ -68,7 +68,7 @@ namespace XCom.Models
         /// <returns>JSON string presentation of the object</returns>
         public string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
         /// <summary>

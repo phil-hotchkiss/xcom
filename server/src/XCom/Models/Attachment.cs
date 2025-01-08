@@ -41,7 +41,7 @@ namespace XCom.Models
         /// <summary>
         /// Gets or Sets ContentType
         /// </summary>
-        /// <example>&quot;application/pdf&quot;</example>
+        /* <example>&quot;application/pdf&quot;</example> */
         [DataMember(Name="contentType", EmitDefaultValue=false)]
         public string ContentType { get; set; }
 
@@ -102,7 +102,7 @@ namespace XCom.Models
         /// <returns>JSON string presentation of the object</returns>
         public string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.Indented);
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
         /// <summary>
