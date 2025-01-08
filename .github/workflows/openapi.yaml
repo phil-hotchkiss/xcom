@@ -22,7 +22,8 @@ jobs:
       - name: Clone OpenAPI Spec Repository
         run: |
           git clone https://github.com/phil-hotchkiss/openapi-specifications.git ./specs-repo
-
+      - name: Clone Template Repository
+          git clone https://github.com/phil-hotchkiss/openapi-codegen-tempaltes.git ./templates-repo
 
       - name: Install OpenAPI Generator CLI
         run: |
@@ -34,6 +35,7 @@ jobs:
           -i ./specs-repo/xcom/private/spec.yml \
           -g aspnetcore \
           -o ./server \
+          -- template-dir ./templates-repo/aspnetcore \
           --additional-properties=useNewtonsoft=true,useSwashbuckle=true,aspNetCoreVersion=8,targetFramework=net8.0,packageName=XCom,solutionName=XCom,operationModifier=abstract,classModifier=abstract
 
       - name: Commit and Push Generated Code
