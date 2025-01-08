@@ -27,7 +27,7 @@ jobs:
       - name: Generate .NET 8 Server Stub
         run: |
           java -jar openapi-generator-cli.jar generate \
-          -i ./index.yaml \
+          -i phil-hotchkiss/openapi-specifications/xcom/private/spec.yml \
           -g aspnetcore \
           -o ./server \
           --additional-properties=useNewtonsoft=true,useSwashbuckle=true,aspNetCoreVersion=8,targetFramework=net8.0,packageName=XCom,solutionName=XCom,operationModifier=abstract,classModifier=abstract
