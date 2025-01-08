@@ -23,6 +23,7 @@ jobs:
         run: |
           git clone https://github.com/phil-hotchkiss/openapi-specifications.git ./specs-repo
       - name: Clone Template Repository
+        run: | 
           git clone https://github.com/phil-hotchkiss/openapi-codegen-tempaltes.git ./templates-repo
 
       - name: Install OpenAPI Generator CLI
