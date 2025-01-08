@@ -21,7 +21,7 @@ jobs:
           distribution: 'temurin'
       - name: Clone OpenAPI Spec Repository
         run: |
-          git clone https://github.com/<organization>/openapi-specifications.git ./specs-repo
+          git clone https://github.com/phil-hotchkiss/openapi-specifications.git ./specs-repo
 
 
       - name: Install OpenAPI Generator CLI
