@@ -44,7 +44,7 @@ jobs:
       - name: Generate .NET 8 Server Stub
         run: |
           java -jar openapi-generator-cli.jar generate \
-          -i ./specs-repo/xcom/private/spec.yml \
+          -i ./specs-repo/vcce/xcom/spec.yml \
           -g aspnetcore \
           -o ./server \
           --template-dir ./templates-repo/aspnetcore \
