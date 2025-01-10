@@ -30,7 +30,7 @@ jobs:
 
       - name: Run Spectral Analysis
         run: |
-          spectral lint --ruleset ./specs-repo/.spectral.yml ./specs-repo/xcom/private/spec.yml
+          spectral lint --ruleset ./specs-repo/.spectral.yml ./specs-repo/vcce/xcom/spec.yml
         continue-on-error: false 
 
       - name: Clone OpenAPI Codegen Templates Repository
