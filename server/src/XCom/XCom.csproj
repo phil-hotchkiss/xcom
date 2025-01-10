@@ -9,7 +9,7 @@
     <Version>1.0.0</Version>
     <AssemblyName>XCom</AssemblyName>
     <PackageId>XCom</PackageId>
-    <UserSecretsId>be002da5-4471-4651-a83f-db0b3c6bef5a</UserSecretsId>
+    <UserSecretsId>a8e621b0-cd32-4c45-9a11-e0f47f1b6812</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
   </PropertyGroup>
