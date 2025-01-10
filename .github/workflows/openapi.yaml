@@ -2,8 +2,6 @@ name: Generate .NET 8 Server Stub
 
 on:
   push:
-    paths:
-      - index.yaml  # Trigger when OpenAPI spec files are modified
   workflow_dispatch:  # Allow manual triggering
 
 jobs:
@@ -23,6 +21,17 @@ jobs:
       - name: Clone OpenAPI Spec Repository
         run: |
           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/phil-hotchkiss/openapi-specifications.git ./specs-repo
+
+      - name: Install Node.js and Spectral
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'
+      - run: npm install -g @stoplight/spectral-cli
+
+      - name: Run Spectral Analysis
+        run: |
+          spectral lint --ruleset ./specs-repo/spectral.yml ./specs-repo/xcom/private/spec.yml
+        continue-on-error: false 
 
       - name: Clone OpenAPI Codegen Templates Repository
         run: |
