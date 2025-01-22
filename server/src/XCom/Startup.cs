@@ -17,13 +17,21 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using XCom.Application.Commands.CreateTemplateSet;
+using XCom.Application.Services;
+using XCom.Domain.Interfaces;
+using XCom.Infrastructure.Repositories;
+using XCom.Infrastructure.Services;
 using XCom.Authentication;
 using XCom.Filters;
 using XCom.OpenApi;
 using XCom.Formatters;
+using XCom.Configuration;
+using SendGrid;
 
 namespace XCom
 {
@@ -52,6 +60,25 @@ namespace XCom
         /// <param name="services"></param>
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Memory Cache
+            services.AddMemoryCache();
+
+            // Configure SendGrid
+            services.Configure<SendGridOptions>(Configuration.GetSection(SendGridOptions.SendGrid));
+            services.AddSingleton<ISendGridClient>(sp => 
+            {
+                var options = sp.GetRequiredService<IOptions<SendGridOptions>>();
+                return new SendGridClient(options.Value.ApiKey);
+            });
+
+            // Add Repositories
+            services.AddScoped<ITemplateSetRepository, TemplateSetRepository>();
+
+            // Add Services
+            services.AddScoped<ITemplateSelectionService, TemplateSelectionService>();
+
+            // Register application services
+            services.AddScoped<ICreateTemplateSetCommandHandler, CreateTemplateSetCommandHandler>();
 
             // Add framework services.
             services
@@ -67,38 +94,40 @@ namespace XCom
                         NamingStrategy = new CamelCaseNamingStrategy()
                     });
                 });
-            services
-                .AddSwaggerGen(c =>
-                {
-                    c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
-                    
-                    c.SwaggerDoc("4.0", new OpenApiInfo
-                    {
-                        Title = "XCom.API",
-                        Description = "XCom.API (ASP.NET Core 3.1)",
-                        TermsOfService = new Uri("https://github.com/openapitools/openapi-generator"),
-                        Contact = new OpenApiContact
-                        {
-                            Name = "OpenAPI-Generator Contributors",
-                            Url = new Uri("https://github.com/openapitools/openapi-generator"),
-                            Email = "phil.hotchkiss@veteransunited.com"
-                        },
-                        License = new OpenApiLicense
-                        {
-                            Name = "NoLicense",
-                            Url = new Uri("http://localhost")
-                        },
-                        Version = "4.0",
-                    });
-                    c.CustomSchemaIds(type => type.FriendlyId(true));
-                    c.IncludeXmlComments($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{Assembly.GetExecutingAssembly().GetName().Name}.xml");
 
-                    // Include DataAnnotation attributes on Controller Action parameters as OpenAPI validation rules (e.g required, pattern, ..)
-                    // Use [ValidateModelState] on Actions to actually validate it in C# as well!
-                    c.OperationFilter<GeneratePathParamsValidationFilter>();
+            // Configure Swagger
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations(enableAnnotationsForInheritance: true, enableAnnotationsForPolymorphism: true);
+                
+                c.SwaggerDoc("4.0", new OpenApiInfo
+                {
+                    Title = "XCom.API",
+                    Description = "XCom.API (ASP.NET Core 3.1)",
+                    TermsOfService = new Uri("https://github.com/openapitools/openapi-generator"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "OpenAPI-Generator Contributors",
+                        Url = new Uri("https://github.com/openapitools/openapi-generator"),
+                        Email = "phil.hotchkiss@veteransunited.com"
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "NoLicense",
+                        Url = new Uri("http://localhost")
+                    },
+                    Version = "4.0",
                 });
-                services
-                    .AddSwaggerGenNewtonsoftSupport();
+                c.CustomSchemaIds(type => type.FriendlyId(true));
+                c.IncludeXmlComments($"{AppContext.BaseDirectory}{Path.DirectorySeparatorChar}{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+
+                // Include DataAnnotation attributes on Controller Action parameters as OpenAPI validation rules (e.g required, pattern, ..)
+                // Use [ValidateModelState] on Actions to actually validate it in C# as well!
+                c.OperationFilter<GeneratePathParamsValidationFilter>();
+            });
+            services
+                .AddSwaggerGenNewtonsoftSupport();
         }
 
         /// <summary>
@@ -111,6 +140,15 @@ namespace XCom
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger(c => 
+                {
+                    c.RouteTemplate = "swagger/{documentName}/swagger.json";
+                });
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/4.0/swagger.json", "XCom API v4.0");
+                    c.RoutePrefix = "swagger";
+                });
             }
             else
             {
@@ -120,20 +158,6 @@ namespace XCom
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseSwagger(c =>
-                {
-                    c.RouteTemplate = "openapi/{documentName}/openapi.json";
-                })
-                .UseSwaggerUI(c =>
-                {
-                    // set route prefix to openapi, e.g. http://localhost:8080/openapi/index.html
-                    c.RoutePrefix = "openapi";
-                    //TODO: Either use the SwaggerGen generated OpenAPI contract (generated from C# classes)
-                    c.SwaggerEndpoint("/openapi/4.0/openapi.json", "XCom.API");
-
-                    //TODO: Or alternatively use the original OpenAPI contract that's included in the static files
-                    // c.SwaggerEndpoint("/openapi-original.json", "XCom.API Original");
-                });
             app.UseRouting();
             app.UseEndpoints(endpoints =>
                 {

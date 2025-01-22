@@ -72,6 +72,8 @@ namespace XCom.Models
         [DataMember(Name="attachmentsEnabled", EmitDefaultValue=true)]
         public bool AttachmentsEnabled { get; set; } = true;
 
+        public Guid Id { get; set; }
+
         /// <summary>
         /// Returns the string presentation of the object
         /// </summary>

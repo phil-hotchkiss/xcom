@@ -1,0 +1,562 @@
+openapi: 3.0.0
+info:
+  description: 'This API is responsible for enabling communication with SendGrid. It implements additional features such as data retention and A/B Testing for specific templates'
+  version: '4.0'
+  title: XCom.API
+  contact:
+    email: phil.hotchkiss@veteransunited.com
+tags:
+  - name: mail
+    description: Mail Delivery
+  - name: connect
+    description: Webhook Behavior
+  - name: template-sets
+    description: Template Set Management
+paths:
+  /template-sets: 
+    post: 
+      description: Create a template set
+      tags: 
+        - template-sets
+      summary: Create a template set
+      operationId: createTemplateSet
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/TemplateSet'
+      responses: 
+        '201': 
+          description: Created
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/TemplateSetCreateSuccessResponse'
+    get: 
+      tags: 
+        - template-sets
+      summary: Get template sets by query parameters
+      operationId: queryTemplateSets
+      description: Get template sets by query parameters
+      parameters: 
+        - in: query
+          name: sendGridTemplateId
+          required: false
+          schema: 
+            type: string
+        - in: query
+          name: templateSetName
+          required: false
+          schema: 
+            type: string
+      responses: 
+        '200': 
+          description: OK
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/QueryTemplateSetSuccessResponse'
+  /template-sets/{id}: 
+    get: 
+      tags: 
+        - template-sets
+      description: Get a template set by id
+      parameters: 
+        - in: path
+          name: id
+          required: true
+          schema: 
+            type: string
+            format: guid
+      summary: Get a template set
+      operationId: getTemplateSet
+      responses: 
+        '200': 
+          description: Ok
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/GetTemplateSetSuccessResponse'
+    patch: 
+      tags: 
+        - template-sets
+      description: Update a template set
+      parameters: 
+        - in: path
+          name: id
+          required: true
+          schema: 
+            type: string
+            format: guid
+      summary: Update a template set 
+      operationId: updateTemplateSet
+      requestBody: 
+        content: 
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/TemplateSet'
+      responses: 
+        '204': 
+          description: No Content
+        '400': 
+          description: Bad Request
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/ErrorResponse"
+        '404': 
+          description: Not Found
+          content: 
+            application/json: 
+              schema: 
+                $ref: "#/components/schemas/ErrorResponse"
+  /templated-email: 
+    post: 
+      tags: 
+        - mail
+      summary: Send a templated email
+      operationId: sendTemplatedEmail
+      description: Send a templated email
+      requestBody:
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/TemplatedEmailRequest'
+      responses: 
+        '200': 
+          description: Accepted
+          content: 
+            application/json: 
+              schema: 
+                $ref: '#/components/schemas/TemplatedEmailSuccessResponse'
+        '400': 
+          description: Bad Request
+    
+  /simple-email:
+    post:
+      tags:
+        - mail
+      summary: Send simple email
+      operationId: sendSimpleEmail
+      description: Send Simple Email without template
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SimpleMailRequest'
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Bad Request
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /connect:
+    post:
+      tags:
+        - connect
+      summary: Webhook for SendGrid Events
+      operationId: connect
+      description: Webhook to Receive SendGrid Events
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/SendgridWebhook'
+        description: Webhook
+      responses:
+        '200':
+          description: Webhook Event Receive
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Webhook Event Not Receive
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  securitySchemes:
+    oidc:
+      type: openIdConnect
+      openIdConnectUrl: https://vu.okta.com/oauth2/ausug0zrmfVA3d6Nx0x7/.well-known/openid-configuration
+  schemas:
+    SuccessResponseData: 
+      type: object
+      properties: 
+        id: 
+          type: string
+        updated: 
+          type: string
+          format: date-time
+        deleted: 
+          type: string
+          format: date-time
+    Response: 
+      externalDocs:
+        url: 'https://google.github.io/styleguide/jsoncstyleguide.xml'
+        description: 'Google Json Style Guide'
+      properties:
+        apiVersion:
+          type: string
+        id: 
+          type: string
+    SuccessResponse: 
+      allOf: 
+      - $ref: '#/components/schemas/Response'
+      - type: object
+        required: 
+        - data
+          
+    ResponseErrorModel:
+      properties: 
+        domain: 
+          type: string
+        reason: 
+          type: string
+        message: 
+          type: string
+        location: 
+          type: string
+        locationType: 
+          type: string
+        extendedHelp: 
+          type: string
+        sendReport: 
+          type: string
+    ResponseError: 
+      properties: 
+        code: 
+          type: integer
+        message:
+          type: string
+        errors: 
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseErrorModel'
+    ErrorResponse: 
+      allOf: 
+      - $ref: '#/components/schemas/Response'
+      - type: object
+        required: 
+        - error
+        - apiVersion
+        properties: 
+          error: 
+            $ref: '#/components/schemas/ResponseError'
+    TemplateSet: 
+      type: object
+      properties: 
+        templateSetName: 
+          type: string
+          description: This will be the name by which you identify the template set. It must be unique. 
+        categories: 
+          type: array
+          items: 
+            type: string
+        variations: 
+          type: array
+          description: These are the send grid templates that are going to be used for your multi-variate email
+          items: 
+            $ref: '#/components/schemas/Variation'
+        rateLimit: 
+          $ref: '#/components/schemas/RateLimit'
+        description: 
+          type: string
+          description: This property is used to describe the template set use case
+        bcc: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Recipient'
+        attachmentsEnabled: 
+          type: boolean
+          description: Indicates whether or not attachments are enabled for the designated template
+          default: true
+    RateLimit: 
+      type: object
+      properties: 
+        period: 
+          type: number
+        limit: 
+          type: number
+    Variation:
+      type: object
+      properties: 
+        sendGridTemplateId: 
+          type: string
+        percentage: 
+          type: number
+          format: float
+    TemplatedEmailRequest: 
+      type: object 
+      properties: 
+        templateSetName: 
+          type: string
+          description: This is the name identifying the set of templates to be grouped together for the delivery of this email
+        businessKey: 
+          type: string
+          description: This key is leveraged for rate limiting purposes. When specified, if the template has a rate limit specified, the business key will be utilied for the rate limit. 
+        onBehalfOfBranch: 
+          type: string
+          description: When specified, the dynamic template data supplied to SendGrid will include relevant content associated with that branch (address, footer, website, socials)
+        to: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Recipient'
+        cc: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Recipient'
+        bcc: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Recipient'
+        templateData: 
+          type: object
+        from: 
+          $ref: '#/components/schemas/Recipient'
+        replyTo: 
+          $ref: '#/components/schemas/Recipient'
+        sendAt: 
+          type: string
+          format: date-time
+        batchId: 
+          type: string
+        attachments: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Attachment'
+    TemplatedEmailSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/TemplatedEmailResponseData'
+    TemplatedEmailResponseData:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponseData'
+    TemplateSetCreateSuccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/TemplateSetCreateSuccessResponseData'
+    TemplateSetCreateSuccessResponseData:
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponseData'
+    GetTemplateSetSuccessResponse: 
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/GetTemplateSetSuccessResponseData'
+    GetTemplateSetSuccessResponseData: 
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponseData'
+        - $ref: '#/components/schemas/TemplateSet'
+    QueryTemplateSetSuccessResponse: 
+      allOf:
+        - $ref: '#/components/schemas/SuccessResponse'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/QueryTemplateSetSuccessResponseData'
+    QueryTemplateSetSuccessResponseData: 
+      allOf: 
+        - $ref: '#/components/schemas/SuccessResponseData'
+        - type: object
+          properties: 
+            items: 
+              type: array
+              items: 
+                $ref: '#/components/schemas/TemplateSet'
+    SendgridWebhook:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/WebhookType'
+        sg_message_id:
+          type: string
+        ip:
+          type: string
+        sg_event_id:
+          type: string
+        event:
+          $ref: '#/components/schemas/WebhookEvent'
+        response:
+          type: string
+        email:
+          type: string
+        timestamp:
+          type: string
+        smtp-id:
+          type: string
+        status:
+          type: string
+        xcomid:
+          type: integer
+          format: int64
+        sendrequestguid:
+          type: string
+          format: uuid
+        environment:
+          type: string
+    WebhookEvent:
+      type: string
+      enum:
+        - Processed
+        - Dropped
+        - Delivered
+        - Deferred
+        - Bounce
+        - Open
+        - Click
+        - SpamReport
+        - Unsubscribe
+        - Group_Unsubscribe
+        - Group_Resubscribe
+    WebhookType:
+      type: string
+      enum:
+        - blocked
+        - bounce
+    SimpleMailRequest:
+      type: object
+      properties:
+        to: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Recipient'
+        cc: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Recipient'
+        bcc: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/Recipient'
+        from: 
+          $ref: '#/components/schemas/Recipient'
+        replyTo: 
+          $ref: '#/components/schemas/Recipient'
+        sendAt: 
+          type: string
+          format: date-time
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Attachment'
+        subject: 
+          type: string
+        content: 
+          $ref: '#/components/schemas/Content' 
+    Content: 
+      type: object
+      properties: 
+        type: 
+          type: string
+          enum: 
+            - "text/plain"
+            - "text/html"
+        value:
+          type: string
+    Recipient: 
+      type: object
+      properties: 
+        name: 
+          type: string
+        email: 
+          type: string
+    Attachment:
+      type: object
+      properties: 
+        content: 
+          type: string
+        contentId: 
+          type: string
+        contentType: 
+          type: string
+          example: application/pdf
+        filename: 
+          type: string
+        disposition: 
+          type: string
+          enum: 
+            - attachment
+            - inline
+    MailResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Email has been sent
+        xcomRequestId:
+          type: integer
+          example: 1234
+        successful:
+          type: boolean
+          example: false
+    ApplicationType:
+      type: string
+      enum:
+        - NotSet
+        - Vuhl
+        - Bank
+        - Paddio
+        - SsOps
+        - MRC
+        - SelectStar
+    NewTemplateRequest:
+      type: object
+      required:
+        - templateName
+        - application
+        - sendGridTemplateId
+      properties:
+        templateName:
+          type: string
+        application:
+          $ref: '#/components/schemas/ApplicationType'
+        sendGridTemplateId:
+          type: string
+        description:
+          type: string
+        permissions:
+          type: integer
+    DeleteTemplateRequest:
+      type: object
+      required:
+        - templateId
+      properties:
+        templateId:
+          type: integer
+    UpdateTemplateRequest:
+      type: object
+      required:
+        - id
+        - templateName
+        - application
+        - sendGridTemplateId
+      properties:
+        id:
+          type: integer
+        templateName:
+          type: string
+        application:
+          $ref: '#/components/schemas/ApplicationType'
+        sendGridTemplateId:
+          type: string
+        description:
+          type: string
+        permissions:
+          type: integer
+   

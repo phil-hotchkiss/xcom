@@ -1,0 +1,13 @@
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/bin/Debug/net8.0/XCom.Domain.deps.json
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/bin/Debug/net8.0/XCom.Domain.dll
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/bin/Debug/net8.0/XCom.Domain.pdb
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/XCom.Domain.csproj.AssemblyReference.cache
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/XCom.Domain.GeneratedMSBuildEditorConfig.editorconfig
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/XCom.Domain.AssemblyInfoInputs.cache
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/XCom.Domain.AssemblyInfo.cs
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/XCom.Domain.csproj.CoreCompileInputs.cache
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/XCom.Domain.sourcelink.json
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/XCom.Domain.dll
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/refint/XCom.Domain.dll
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/XCom.Domain.pdb
+/Users/phil.hotchkiss/git/xcom/server/src/XCom.Domain/obj/Debug/net8.0/ref/XCom.Domain.dll
