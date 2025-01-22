@@ -41,7 +41,7 @@ namespace XCom.Controllers
         [ValidateModelState]
         [SwaggerOperation("SendSimpleEmail")]
         [SwaggerResponse(statusCode: 400, type: typeof(ErrorResponse), description: "Bad Request")]
-        public abstract Task<IActionResult> SendSimpleEmail([FromBody]SimpleMailRequest simpleMailRequest);
+        public abstract IActionResult SendSimpleEmail([FromBody]SimpleMailRequest simpleMailRequest);
 
         /// <summary>
         /// Send a templated email
@@ -56,6 +56,6 @@ namespace XCom.Controllers
         [ValidateModelState]
         [SwaggerOperation("SendTemplatedEmail")]
         [SwaggerResponse(statusCode: 200, type: typeof(TemplatedEmailSuccessResponse), description: "Accepted")]
-        public abstract Task<IActionResult> SendTemplatedEmail([FromBody]TemplatedEmailRequest templatedEmailRequest);
+        public abstract IActionResult SendTemplatedEmail([FromBody]TemplatedEmailRequest templatedEmailRequest);
     }
 }

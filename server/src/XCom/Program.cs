@@ -27,7 +27,7 @@ namespace XCom
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                    webBuilder.UseStartup<Startup>()
-                             .UseUrls("https://localhost:5001/");
+                             .UseUrls("http://0.0.0.0:8080/");
                 });
     }
 }
