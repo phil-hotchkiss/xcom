@@ -1,61 +1,60 @@
-name: Generate .NET 8 Server Stub
+# name: Generate .NET 8 Server Stub
 
-on:
-  push:
-  workflow_dispatch:  # Allow manual triggering
+# on:
+#   workflow_dispatch:  # Allow manual triggering
 
-jobs:
-  generate-server-stub:
-    runs-on: ubuntu-latest
+# jobs:
+#   generate-server-stub:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Set up Java for OpenAPI Generator
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
+#       - name: Set up Java for OpenAPI Generator
+#         uses: actions/setup-java@v3
+#         with:
+#           java-version: '11'
+#           distribution: 'temurin'
 
-      - name: Clone OpenAPI Spec Repository
-        run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/phil-hotchkiss/openapi-specifications.git ./specs-repo
+#       - name: Clone OpenAPI Spec Repository
+#         run: |
+#           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/phil-hotchkiss/openapi-specifications.git ./specs-repo
 
-      - name: Install Node.js and Spectral
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22'
-      - run: npm install -g @stoplight/spectral-cli
+#       - name: Install Node.js and Spectral
+#         uses: actions/setup-node@v3
+#         with:
+#           node-version: '22'
+#       - run: npm install -g @stoplight/spectral-cli
 
-      - name: Run Spectral Analysis
-        run: |
-          spectral lint --ruleset ./specs-repo/.spectral.yml ./specs-repo/vcce/xcom/spec.yml
-        continue-on-error: false 
+#       - name: Run Spectral Analysis
+#         run: |
+#           spectral lint --ruleset ./specs-repo/.spectral.yml ./specs-repo/vcce/xcom/spec.yml
+#         continue-on-error: false 
 
-      - name: Clone OpenAPI Codegen Templates Repository
-        run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/phil-hotchkiss/openapi-codegen-templates.git ./templates-repo
+#       - name: Clone OpenAPI Codegen Templates Repository
+#         run: |
+#           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/phil-hotchkiss/openapi-codegen-templates.git ./templates-repo
 
-      - name: Install OpenAPI Generator CLI
-        run: |
-          wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.6.0/openapi-generator-cli-6.6.0.jar -O openapi-generator-cli.jar
+#       - name: Install OpenAPI Generator CLI
+#         run: |
+#           wget https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.6.0/openapi-generator-cli-6.6.0.jar -O openapi-generator-cli.jar
 
-      - name: Generate .NET 8 Server Stub
-        run: |
-          java -jar openapi-generator-cli.jar generate \
-          -i ./specs-repo/vcce/xcom/spec.yml \
-          -g aspnetcore \
-          -o ./server \
-          --template-dir ./templates-repo/aspnetcore \
-          --additional-properties=useNewtonsoft=true,useSwashbuckle=true,aspNetCoreVersion=8,targetFramework=net8.0,packageName=XCom,solutionName=XCom,operationModifier=abstract,classModifier=abstract
+#       - name: Generate .NET 8 Server Stub
+#         run: |
+#           java -jar openapi-generator-cli.jar generate \
+#           -i ./specs-repo/vcce/xcom/spec.yml \
+#           -g aspnetcore \
+#           -o ./server \
+#           --template-dir ./templates-repo/aspnetcore \
+#           --additional-properties=useNewtonsoft=true,useSwashbuckle=true,aspNetCoreVersion=8,targetFramework=net8.0,packageName=XCom,solutionName=XCom,operationModifier=abstract,classModifier=abstract
 
-      - name: Commit and Push Generated Code
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./server
-          git commit -m "Generated .NET 8 server stub from OpenAPI spec"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#       - name: Commit and Push Generated Code
+#         run: |
+#           git config --local user.name "github-actions[bot]"
+#           git config --local user.email "github-actions[bot]@users.noreply.github.com"
+#           git add ./server
+#           git commit -m "Generated .NET 8 server stub from OpenAPI spec"
+#           git push
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
