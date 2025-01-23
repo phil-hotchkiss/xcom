@@ -104,7 +104,7 @@ namespace XCom
                 c.SwaggerDoc("4.0", new OpenApiInfo
                 {
                     Title = "XCom.API",
-                    Description = "XCom.API (ASP.NET Core 3.1)",
+                    Description = "XCom.API",
                     TermsOfService = new Uri("https://github.com/openapitools/openapi-generator"),
                     Contact = new OpenApiContact
                     {
